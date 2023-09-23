@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: travel-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "poetry run alembic upgrade heads 
+      && poetry run python src/main.py"
+    env_file: .env
+    environment: 
+      - PYTHONPATH=.
+    depends_on:
+      - db
+
+  db:
+    container_name: travel-bot-db
+    image: postgres:15
+    ports:
+      - '5432:5432'
+    env_file: .env
+    restart: always
+    volumes:
+      - .data/database:/var/lib/postgresql/data
+
