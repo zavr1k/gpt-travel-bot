@@ -1,3 +1,5 @@
+import logging
+
 import openai
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,6 +8,7 @@ from src.database import async_session_maker
 from src.models import Role
 from src.settings import settings
 
+logger = logging.getLogger(__file__)
 openai.api_key = settings.API_KEY
 
 
@@ -35,7 +38,8 @@ class TravelAssistant:
             try:
                 assistant_respose = \
                     response["choices"][0]["message"]["content"]
-            except Exception:
+            except Exception as e:
+                logger.error(e)
                 assistant_respose = \
                     "Не удалось выоплнить запрос, попробуйте позже"
 
